@@ -110,8 +110,6 @@ mv_ret = p_perf[1][np.argmin(p_perf[0])]
 mv_vol = p_perf[0][np.argmin(p_perf[0])]
 
 def table_weights(rel_risk_aversion):
-    # port_weights = {}
-    # port_weights['Portfolio'] = {'Max Sharpe Ratio', 'Min Variance', 'Two-Fund Portfolio' } 
     crra_w = np.round(crra_weights(rel_risk_aversion)*100,2)
 
     if len(crra_w) == 5: 
@@ -119,74 +117,29 @@ def table_weights(rel_risk_aversion):
     else:
         rf_crra = crra_w[5]
 
-
-    port_weights = {
-    'Portfolio': ['Max Sharpe Ratio','Min Variance', 'Two-Fund Portfolio' ],
-    'US Equity': [sr_weights[0],  mv_weights[0],  crra_w[0]],
-    'Treasury Bonds': [sr_weights[1], mv_weights[1], crra_w[1]],
-    'Real Estate': [sr_weights[2], mv_weights[2], crra_w[2]],
-    'Commodities': [sr_weights[3], mv_weights[3], crra_w[3]],
-    'ESG': [sr_weights[4], mv_weights[4], crra_w[4]],
-    'Risk Free Rate': [0,0,rf_crra],
-    }
-    # port_weights['US Equity'] = { sr_weights[0],  mv_weights[0],  crra_w[0]}
-    # port_weights['Treasury Bonds'] = {sr_weights[1], mv_weights[1], crra_w[1]}
-    # port_weights['Real Estate'] = {sr_weights[2], mv_weights[2], crra_w[2]}
-    # port_weights['Commodities'] = {sr_weights[3], mv_weights[3], crra_w[3]}
-    # port_weights['ESG'] = {sr_weights[4], mv_weights[4], crra_w[4]}
-    # port_weights['Risk Free Rate'] = {0, 0, rf_crra}
+    port_weights = [{'Portfolio': 'Max Sharpe Ratio',
+                    'US Equity': sr_weights[0],
+                    'Treasury Bonds': sr_weights[1],
+                    'Real Estate': sr_weights[2],
+                    'Commodities': sr_weights[3],
+                    'ESG': sr_weights[4],
+                    'Risk Free Rate': 0},
+                    {'Portfolio': 'Min Variance',
+                    'US Equity': mv_weights[0],
+                    'Treasury Bonds': mv_weights[1],
+                    'Real Estate': mv_weights[2],
+                    'Commodities': mv_weights[3],
+                    'ESG': sr_weights[4],
+                    'Risk Free Rate': 0},
+                    {'Portfolio': 'Two-Fund Portfolio',
+                    'US Equity': crra_w[0],
+                    'Treasury Bonds': crra_w[1],
+                    'Real Estate': crra_w[2],
+                    'Commodities': crra_w[3],
+                    'ESG': crra_w[4],
+                    'Risk Free Rate': rf_crra}]
 
     return port_weights
-
-
-
-
-
-# # Table Weights:
-# def table_weights(rel_risk_aversion):
-
-    # port_weights = pd.DataFrame(columns = ['Portfolio','US Equity', 'Treasury Bonds','Real Estate', 'Commodities', 'ESG', 'Risk Free Rate'], index = [0 , 1, 2])
-    # port_weights['Portfolio'] = 'Max Sharpe Ratio', 'Min Variance', 'Two-Fund Portfolio' 
-    
-    # crra_w = crra_weights(rel_risk_aversion)
-    # if len(crra_w) == 2:
-    #     for i in range(port_weights.shape[1]-2):
-    #         port_weights.iloc[0,i+1] = sr_weights[i]*100
-    #         port_weights.iloc[1,i+1] = mv_weights[i]*100
-    #         port_weights.iloc[2,i+1] = sr_weights[i]*crra_w[0]*100
-        
-    #     port_weights.iloc[2,6] = crra_w[1]*100
-
-    # else:
-    #     for i in range(port_weights.shape[1]-2):
-    #         port_weights.iloc[0,i+1] = sr_weights[i]*100
-    #         port_weights.iloc[1,i+1] = mv_weights[i]*100
-    #         port_weights.iloc[2,i+1] = crra_w[i]*100
-    #     port_weights.iloc[2,6] = 0
-
-    # port_weights.iloc[0,6] = 0
-    # port_weights.iloc[1,6] = 0
-
-    # port_weights['US Equity']=port_weights['US Equity'].map('{:,.2f}%'.format)
-    # port_weights['Treasury Bonds']=port_weights['Treasury Bonds'].map('{:,.2f}%'.format)
-    # port_weights['Real Estate']=port_weights['Real Estate'].map('{:,.2f}%'.format)
-    # port_weights['Commodities']=port_weights['Commodities'].map('{:,.2f}%'.format)
-    # port_weights['ESG']=port_weights['ESG'].map('{:,.2f}%'.format)
-    # port_weights['Risk Free Rate']=port_weights['Risk Free Rate'].map('{:,.2f}%'.format)
-#     return port_weights
-
-# hist_perf_sr = pd.DataFrame(columns = ['Return', 'Volatility', 'Sharpe Ratio'], index = close_price.index[253:len(close_price)])
-# hist_perf_mv = pd.DataFrame(columns = ['Return', 'Volatility', 'Sharpe Ratio'], index = close_price.index[253:len(close_price)])
-
-# for i in range(len(close_price)-253): # starts in Mar 31, 2008
-#     mu, sigma, num_assets =  port_parameters(close_price.iloc[0+i:i+252,:])
-    
-#     hist_perf_sr['Return'][i] = portfolio_return(sr_weights, mu)
-#     hist_perf_sr['Volatility'][i] = portfolio_volatility(sr_weights, mu, sigma)
-#     hist_perf_sr['Sharpe Ratio'][i] = (hist_perf_sr['Return'][i] - annual_rf.mean()) / hist_perf_sr['Volatility'][i]
-#     hist_perf_mv['Return'][i] = portfolio_return(mv_weights, mu)
-#     hist_perf_mv['Volatility'][i] = portfolio_volatility(mv_weights, mu, sigma)
-#     hist_perf_mv['Sharpe Ratio'][i] = (hist_perf_mv['Return'][i] - annual_rf.mean()) / hist_perf_mv['Volatility'][i]
 
 ########### Utility function
 
@@ -249,7 +202,9 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     layout = Layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        width= 1000,
+        #width= 1000,
+        xaxis_title='Volatility',
+        yaxis_title='Return',
         legend_orientation="h"
     )
 

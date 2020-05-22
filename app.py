@@ -18,7 +18,8 @@ server = app.server
 
 text_style = {'font-size': '26px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#7F90AC'}
 subtext_style = {'font-size': '20px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
-paragraph_style = {'font-size': '12px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
+paragraph_style = {'font-size': '16px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7688a3'}
+disclaimer_style = {'font-size': '12px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
 color_line = ['rgb(67, 67, 67)','rgb(68, 68, 68)','rgb(22, 96, 167)','rgb(55, 128, 191)','rgb(0, 0, 0)','rgb(20, 20, 20)','rgb(50, 50, 50)','rgb(100, 100, 0)','rgb(200, 200, 200)']
 
 app.layout = html.Div([
@@ -97,9 +98,11 @@ app.layout = html.Div([
                 }
             ),
         html.H2('Investor Profile', style=text_style),
-        html.Label(['We toss a coin once. You may choose one of the following two options:', 
+        html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
+        html.Label(['We toss a coin once. You may choose one of the following two options:',
                 dcc.Dropdown(
                     id = 'quest1',
+                 #   style = {'font-family': 'verdana'},
                     options=[
                             {'label': "You receive $ 1'000 with either heads or tails", 'value': 0},
                             {'label': "With heads you receive $ 2'000, with tails you don't receive anything at all.", 
@@ -107,7 +110,7 @@ app.layout = html.Div([
                             ],
                         placeholder='Select an option'
                                 )
-                ]),
+                    ]),
         html.Label(['Which of the following two options would you choose?', 
                 dcc.Dropdown(
                     id = 'quest2',
@@ -132,6 +135,7 @@ app.layout = html.Div([
                         placeholder='Select an option'
                                 )
                 ]),
+        html.P('The next question is about your shortfall risk constraint. Here it is defined a level of risk accepted in case a rare disaster event occurs.',style=paragraph_style),
         html.Label(['How much in percentage you accept to lose from your initial wealth (1 year period and with 99% probability)?', 
                 dcc.Dropdown(
                     id = 'quest6',
@@ -142,7 +146,7 @@ app.layout = html.Div([
                             ],
                         placeholder='Select an option'
                                 )
-                ]),# style={'width': '20%', 'display': 'inline-block'}),
+                ]),
             html.Div(id='output-quest-button5',
                     children='Enter a value and press submit'),
             html.Div(id='output-quest-button6',
@@ -150,11 +154,13 @@ app.layout = html.Div([
             html.Button('Submit', id='quest-button'),
             html.H3('Recommendation', style=text_style),
             html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
+            html.P('Here it is recommended 3 portfolios which the allocation weights are expressed in the table below. You can compare the return vs. risk realation of each one in the efficient frontier graph.',style=paragraph_style),
             dcc.Graph(
                 id='efficient_frontier',
                 ),
             
             html.H5('Portfolio Weights', style=text_style),
+            html.P('Allocation of weights in each asset class in percentage points.', style=paragraph_style),
             dash_table.DataTable(
                 id = 'table',
                 data = [{}],
@@ -167,18 +173,19 @@ app.layout = html.Div([
             ),
             html.H6('Portfolio Risk Analysis', style=text_style),
             html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
+            html.P('Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
+            html.P(id = 'risk_paragraph1', style=paragraph_style),
             dcc.RadioItems(
                 id = 'port_select'), 
  
             dcc.Graph(
                 id = 'risk',
             ),
-            html.P(id = 'risk_paragraph1', style=paragraph_style),
             html.H6('Historical Monthly Portfolio Returns from January 2010 to December 2020', style=subtext_style),
             dcc.Graph(
             id='port_performance',      
             ),
-            html.P('Disclaimer: This application is part of the Field Project on Data Science of Barbara Silva de Almeida from Neuchatel University. The use of this content is exclusively for university purpose.', style=paragraph_style),
+            html.P('Disclaimer: This application is part of the Field Project on Data Science of Barbara Silva de Almeida from Neuchatel University. The use of this content is exclusively for university purposes.', style=disclaimer_style),
                 ])
             
 
@@ -238,8 +245,8 @@ def update_output_quest2(n_clicks, value):
     [dash.dependencies.Input('quest-button', 'n_clicks')],
     [dash.dependencies.State('quest6', 'value')])
 def update_output_quest3(n_clicks, value):
-    return 'Your annual shortfall constraint is "{}"'.format(
-        value
+    return 'Your annual shortfall constraint is "{}"%'.format(
+        value*100
     )
 
 @app.callback(
@@ -275,7 +282,7 @@ def update_plot_risk(value):
     Output('risk_paragraph1','children'),
     [dash.dependencies.Input('quest6', 'value')])
 def update_paragraph1(value):
-    return 'Your annual shortfall constraint is "{}".'.format(
+    return 'You can compare your annual shortfall constraint of "{}"% to the value at risk (VaR) of each portfolio.'.format(
         value*100
     )
 
@@ -283,6 +290,6 @@ def update_paragraph1(value):
     dash.dependencies.Output('port_performance','figure'),
     [dash.dependencies.Input('quest5', 'value')])
 def update_plot_perf(value):
-    return port_perf_data(risk_aversion(value))
+    return port_perf_data(value)
 
 
