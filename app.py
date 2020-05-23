@@ -286,7 +286,7 @@ def update_plot_risk(value):
     Output('risk_paragraph1','children'),
     [dash.dependencies.Input('quest6', 'value')])
 def update_paragraph1(value):
-    return 'You can compare your annual shortfall constraint of "{}"% to the value at risk (VaR) of each portfolio.'.format(
+    return 'You can compare your shortfall constraint of "{}"% to the value at risk (VaR) of each portfolio.'.format(
         value*100
     )
 
