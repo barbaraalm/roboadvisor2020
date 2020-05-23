@@ -66,7 +66,7 @@ app.layout = html.Div([
                     
                             ],
                 'layout': {
-                    'title' :'History of Assets Annual Rolling Returns from December 2010 to March 2020',
+                    'title' :'Historical Annual Rolling Returns of Asset Classes from December 2010 to March 2020',
                     'titlefont': dict(
                                     family = 'verdana',
                                     size = 24,
@@ -97,8 +97,11 @@ app.layout = html.Div([
                     }
                 }
             ),
-        html.H2('Investor Profile', style=text_style),
+        html.H2("Investor's Profile", style=text_style),
         html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
+        html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=paragraph_style),
+        html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=paragraph_style),
+        html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=paragraph_style),
         html.Label(['We toss a coin once. You may choose one of the following two options:',
                 dcc.Dropdown(
                     id = 'quest1',
@@ -135,32 +138,33 @@ app.layout = html.Div([
                         placeholder='Select an option'
                                 )
                 ]),
-        html.P('The next question is about your shortfall risk constraint. Here it is defined a level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
-        html.Label(['How much of your investment (in percentage) you accept to lose in one month in the worst case scenario (1% of probability to occur)?', 
+        html.P('The next question is about your shortfall risk constraint. Here it is defined the level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
+        html.Label(['How much of your investment (in percentage) you would be willing to risk in one month in the worst case scenario (1% of probability to occur)?', 
                 dcc.Dropdown(
                     id = 'quest6',
                     options=[
-                            {'label': 'I accept losing no more than 15%', 'value': -0.15},
-                            {'label': 'I accept losing no more than 10%', 'value': -0.1},
-                            {'label': 'I accept losing no more than 5%', 'value': -0.05},
+                            {'label': 'I would be willing to risk no more than 20%', 'value': -0.20},
+                            {'label': 'I would be willing to risk no more than 10%', 'value': -0.10},
+                            {'label': 'I would be willing to risk no more than 5%', 'value': -0.05},
                             ],
                         placeholder='Select an option'
                                 )
                 ]),
+            html.P('By clicking on "Submitt" below, the coefficient of risk aversion and shortfall constraint will be estimated based on your answers.', style = paragraph_style),
             html.Div(id='output-quest-button5',
-                    children='Enter a value and press submit'),
+                    children='Press submit'),
             html.Div(id='output-quest-button6',
-                    children='Enter a value and press submit'),
+                    children=' '),
             html.Button('Submit', id='quest-button'),
             html.H3('Recommendation', style=text_style),
             html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-            html.P('Here it is recommended 3 portfolios which the allocation weights are expressed in the table below. You can compare the return vs. risk relation of each one in the efficient frontier graph.',style=paragraph_style),
+            html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation.',style=paragraph_style),
             dcc.Graph(
                 id='efficient_frontier',
                 ),
             
             html.H5('Portfolio Weights', style=text_style),
-            html.P('Allocation of weights in each asset class in percentage points.', style=paragraph_style),
+            html.P('Allocation of weights for each asset class in percentage points.', style=paragraph_style),
             dash_table.DataTable(
                 id = 'table',
                 data = [{}],
@@ -173,7 +177,7 @@ app.layout = html.Div([
             ),
             html.H6('Portfolio Risk Analysis', style=text_style),
             html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
-            html.P('Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
+            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
             html.P(id = 'risk_paragraph1', style=paragraph_style),
             dcc.RadioItems(
                 id = 'port_select'), 
@@ -236,7 +240,7 @@ def update_quest5(value):
     [dash.dependencies.Input('quest-button', 'n_clicks')],
     [dash.dependencies.State('quest5', 'value')])
 def update_output_quest2(n_clicks, value):
-    return 'Your coefficient of risk aversion is "{}"'.format(
+    return 'Your coefficient of risk aversion is "{}". In a scale of 1 (low risk aversion) to 5 (high risk aversion). '.format(
         risk_aversion(value)
     )
 
@@ -245,7 +249,7 @@ def update_output_quest2(n_clicks, value):
     [dash.dependencies.Input('quest-button', 'n_clicks')],
     [dash.dependencies.State('quest6', 'value')])
 def update_output_quest3(n_clicks, value):
-    return 'Your annual shortfall constraint is "{}"%'.format(
+    return 'Your shortfall risk constraint is "{}"%'.format(
         value*100
     )
 
