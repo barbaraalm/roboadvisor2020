@@ -158,7 +158,7 @@ app.layout = html.Div([
             html.Button('Submit', id='quest-button'),
             html.H3('Recommendation', style=text_style),
             html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-            html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation.',style=paragraph_style),
+            html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
             dcc.Graph(
                 id='efficient_frontier',
                 ),
@@ -177,7 +177,7 @@ app.layout = html.Div([
             ),
             html.H6('Portfolio Risk Analysis', style=text_style),
             html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
-            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ', style=paragraph_style),
+            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
             html.P(id = 'risk_paragraph1', style=paragraph_style),
             dcc.RadioItems(
                 id = 'port_select'), 
