@@ -19,7 +19,7 @@ server = app.server
 text_style = {'font-size': '26px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#7F90AC'}
 subtext_style = {'font-size': '20px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
 paragraph_style = {'font-size': '16px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7688a3'}
-disclaimer_style = {'font-size': '12px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
+disclaimer_style = {'font-size': '14px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
 color_line = ['rgb(67, 67, 67)','rgb(68, 68, 68)','rgb(22, 96, 167)','rgb(55, 128, 191)','rgb(0, 0, 0)','rgb(20, 20, 20)','rgb(50, 50, 50)','rgb(100, 100, 0)','rgb(200, 200, 200)']
 
 app.layout = html.Div([
@@ -99,9 +99,9 @@ app.layout = html.Div([
             ),
         html.H2("Investor's Profile", style=text_style),
         html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
-        html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=paragraph_style),
-        html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=paragraph_style),
-        html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=paragraph_style),
+        html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
+        html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
+        html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
         html.Label(['We toss a coin once. You may choose one of the following two options:',
                 dcc.Dropdown(
                     id = 'quest1',
