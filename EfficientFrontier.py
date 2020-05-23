@@ -41,7 +41,7 @@ def portfolio_return(weights, mu):
     return p_returns
 
 def portfolio_volatility(weights, mu, sigma):
-    p_std = (np.dot(weights.T, np.dot(sigma, weights))* 252)**0.5 # ANNUAL
+    p_std = (252**0.5)*(np.dot(weights.T, np.dot(sigma, weights))**0.5) # ANNUAL
     return p_std
     
 def port_parameters(close_price):
