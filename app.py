@@ -135,14 +135,14 @@ app.layout = html.Div([
                         placeholder='Select an option'
                                 )
                 ]),
-        html.P('The next question is about your shortfall risk constraint. Here it is defined a level of risk accepted in case a rare disaster event occurs.',style=paragraph_style),
-        html.Label(['How much in percentage you accept to lose from your initial wealth (1 year period and with 99% probability)?', 
+        html.P('The next question is about your shortfall risk constraint. Here it is defined a level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
+        html.Label(['How much of your investment (in percentage) you accept to lose in one month in the worst case scenario (1% of probability to occur)?', 
                 dcc.Dropdown(
                     id = 'quest6',
                     options=[
+                            {'label': 'I accept losing no more than 15%', 'value': -0.15},
                             {'label': 'I accept losing no more than 10%', 'value': -0.1},
                             {'label': 'I accept losing no more than 5%', 'value': -0.05},
-                            {'label': 'I dont accept losing my wealth', 'value': 0},
                             ],
                         placeholder='Select an option'
                                 )
