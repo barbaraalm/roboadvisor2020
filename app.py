@@ -154,7 +154,7 @@ app.layout = html.Div([
             html.Button('Submit', id='quest-button'),
             html.H3('Recommendation', style=text_style),
             html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-            html.P('Here it is recommended 3 portfolios which the allocation weights are expressed in the table below. You can compare the return vs. risk realation of each one in the efficient frontier graph.',style=paragraph_style),
+            html.P('Here it is recommended 3 portfolios which the allocation weights are expressed in the table below. You can compare the return vs. risk relation of each one in the efficient frontier graph.',style=paragraph_style),
             dcc.Graph(
                 id='efficient_frontier',
                 ),
