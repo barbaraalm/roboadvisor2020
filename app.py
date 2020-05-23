@@ -154,7 +154,7 @@ app.layout = html.Div([
             html.Div(id='output-quest-button5',
                     children='Press submit'),
             html.Div(id='output-quest-button6',
-                    children=' '),
+                    children=''),
             html.Button('Submit', id='quest-button'),
             html.H3('Recommendation', style=text_style),
             html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
@@ -177,7 +177,7 @@ app.layout = html.Div([
             ),
             html.H6('Portfolio Risk Analysis', style=text_style),
             html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
-            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
+            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ', style=paragraph_style),
             html.P(id = 'risk_paragraph1', style=paragraph_style),
             dcc.RadioItems(
                 id = 'port_select'), 
