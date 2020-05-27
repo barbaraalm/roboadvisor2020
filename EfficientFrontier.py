@@ -7,7 +7,6 @@ import matplotlib.mlab as mlab
 import math
 from AssetClassesData import close_price, daily_return, annual_rf
 
-##### Define variables below:
 #min allocation in each asset ( if 0 no short selling allowed)
 min_allocation = 0
 # max allocation in each asset
@@ -41,7 +40,7 @@ def portfolio_return(weights, mu):
     return p_returns
 
 def portfolio_volatility(weights, mu, sigma):
-    p_std = (252**0.5)*(np.dot(weights.T, np.dot(sigma, weights))**0.5) # ANNUAL
+    p_std = (np.dot(weights.T, np.dot(sigma, weights))* 252)**0.5 # ANNUAL
     return p_std
     
 def port_parameters(close_price):
@@ -93,6 +92,7 @@ p_perf, weights = gen_random_portfolios(num_portfolios, mu, sigma, annual_rf.mea
 
 X, Y, w = eff_portfolio_perf(mu, sigma, target_ret)
 
+
 ## Maximum Sharpe Ratio Portfolio:
 
 sr_weights = np.round(weights[np.argmax(p_perf[2])]*100)
@@ -141,9 +141,7 @@ def table_weights(rel_risk_aversion):
 
     return port_weights
 
-########### Utility function
-
-## CAL
+# CAL - Capital Allocation Line
 cal_x = np.linspace(0, 0.15, 100)
 beta = (sr_ret-annual_rf.mean())/sr_vol
 cal_y = []
@@ -161,7 +159,7 @@ for i in range(len(Y)):
         crra_ret.append(Y[i])
         crra_vol.append(X[i])
 
-# CRRA Lognormal case
+# Utility function: CCRA Lognormal case
 def crra_utility(port_return,port_volatility, rel_risk_aversion):
     return math.log(1+port_return) - (rel_risk_aversion/2)*port_volatility**2
 
@@ -188,7 +186,7 @@ def cal_weights(sr_ret,rf, crra_y):
     weights = p_ret['x']
     return weights
 
-########### Efficient Frontier Plot
+# Efficient Frontier Plot
 
 import chart_studio.plotly as py
 from plotly.graph_objs import *
@@ -243,7 +241,7 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
             mode='lines',
             x = cal_x,
             y = cal_y,
-          line = dict(color='Blue', width=2),
+          line = dict(color='Blue', width=3),
         )
     )
     fig_frontier.add_trace(
@@ -305,5 +303,4 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
         )
     )
     return fig_frontier
-
 
