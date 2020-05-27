@@ -23,175 +23,188 @@ disclaimer_style = {'font-size': '14px', 'font-family': 'verdana', 'textAlign': 
 color_line = ['rgb(67, 67, 67)','rgb(68, 68, 68)','rgb(22, 96, 167)','rgb(55, 128, 191)','rgb(0, 0, 0)','rgb(20, 20, 20)','rgb(50, 50, 50)','rgb(100, 100, 0)','rgb(200, 200, 200)']
 
 app.layout = html.Div([
-        html.H1('Robo-Advisor: Portfolio Management Application', style={'font-size': '32px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#3D81AF'}),
-        dcc.Graph(
-            id='assets_price_hist',
-            figure = {
-                    'data': [
-                        {'x': annual_return.index,
-                        'y': annual_return[Assets[0]], 
-                        'type': 'line', 
-                        'name': Assets[0], 
-                        'color':color_line[0],
-                        'showlegend': True, 
-                        },
-                        {'x': annual_return.index,
-                        'y': annual_return[Assets[1]], 
-                        'type': 'line', 
-                        'name': Assets[1], 
-                        'color':color_line[1],
-                        'showlegend': True, 
-                        },
-                        {'x': annual_return.index,
-                        'y': annual_return[Assets[2]], 
-                        'type': 'line', 
-                        'name': Assets[2], 
-                        'color':color_line[2],
-                        'showlegend': True, 
-                        },
-                        {'x': annual_return.index,
-                        'y': annual_return[Assets[3]], 
-                        'type': 'line', 
-                        'name': Assets[3], 
-                        'color':color_line[3],
-                        'showlegend': True, 
-                        },
-                        {'x': annual_return.index,
-                        'y': annual_return[Assets[4]], 
-                        'type': 'line', 
-                        'name': Assets[4], 
-                        'color':color_line[4],
-                        'showlegend': True, 
-                        },
-                    
-                            ],
-                'layout': {
-                    'title' :'Historical Annual Rolling Returns of Asset Classes from December 2006 to March 2020',
-                    'titlefont': dict(
-                                    family = 'verdana',
-                                    size = 24,
-                                    color = '#7F90AC'),
-                    'xaxis': dict(
-                        rangeselector=dict(
-                            buttons=list([
-                                dict(count=1,
-                                    label='1m',
-                                    step='month',
-                                    stepmode='backward'),
-                                dict(count=6,
-                                    label='6m',
-                                    step='month',
-                                    stepmode='backward'),
-                                dict(count=1,
-                                    label='YTD',
-                                    step='year',
-                                    stepmode='todate'),
-                                dict(count=1,
-                                    label='1y',
-                                    step='year',
-                                    stepmode='backward'),
-                                dict(step='all')
-                                ])
-                            )
-                        )
-                    }
-                }
-            ),
-        html.H2("Investor's Profile", style=text_style),
-        html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
-        html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
-        html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
-        html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
-        html.Label(['We toss a coin once. You may choose one of the following two options:',
-                dcc.Dropdown(
-                    id = 'quest1',
-                 #   style = {'font-family': 'verdana'},
-                    options=[
-                            {'label': "You receive $ 1'000 with either heads or tails", 'value': 0},
-                            {'label': "With heads you receive $ 2'000, with tails you don't receive anything at all.", 
-                            'value': 4},
-                            ],
-                        placeholder='Select an option'
-                                )
-                    ]),
-        html.Label(['Which of the following two options would you choose?', 
-                dcc.Dropdown(
-                    id = 'quest2',
-                        placeholder='Select an option'
-                                )
+        dcc.Tabs( id='tabs', value = 'tab-1', children = [
+                dcc.Tab( id='tab1', value = 'tab-1', label='Investor Profile', children=[ 
+                        html.H1('Robo-Advisor: Portfolio Management Application', style={'font-size': '32px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#3D81AF'}),
+                        html.H2("Investor's Profile", style=text_style),
+                        html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
+                        html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
+                        html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
+                        html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
+                        html.Label(['We toss a coin once. You may choose one of the following two options:',
+                                dcc.Dropdown(
+                                    id = 'quest1',
+                                 #   style = {'font-family': 'verdana'},
+                                    options=[
+                                            {'label': "You receive $ 1'000 with either heads or tails", 'value': 0},
+                                            {'label': "With heads you receive $ 2'000, with tails you don't receive anything at all.", 
+                                            'value': 4},
+                                            ],
+                                        placeholder='Select an option'
+                                                )
+                                    ]),
+                        html.Label(['Which of the following two options would you choose?', 
+                                dcc.Dropdown(
+                                    id = 'quest2',
+                                        placeholder='Select an option'
+                                                )
+                                ]),
+                        html.Label(['Which of the following two options would you choose?', 
+                                dcc.Dropdown(
+                                    id = 'quest3',
+                                        placeholder='Select an option'
+                                                )
+                                ]),
+                        html.Label(['Which of the following two options would you choose?', 
+                                dcc.Dropdown(
+                                    id = 'quest4',
+                                        placeholder='Select an option'
+                                                )
+                                ]),
+                        html.Label(["We toss a coin once. Would you accept the following agreement? Heads, you win $ 1'500. Tails, you lose $ 1'000", 
+                                dcc.Dropdown(
+                                    id = 'quest5',
+                                        placeholder='Select an option'
+                                                )
+                                ]),
+                        html.P('The next question is about your shortfall risk constraint. Here it is defined the level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
+                        html.Label(['How much of your investment (in percentage) you would be willing to risk in one month in the worst case scenario (1% of probability to occur)?', 
+                                dcc.Dropdown(
+                                    id = 'quest6',
+                                    options=[
+                                            {'label': 'I would be willing to risk no more than 20%', 'value': -0.20},
+                                            {'label': 'I would be willing to risk no more than 10%', 'value': -0.10},
+                                            {'label': 'I would be willing to risk no more than 5%', 'value': -0.05},
+                                            ],
+                                        placeholder='Select an option'
+                                                )
+                                ]),
+                        html.P('By clicking on "Submitt" below, the coefficient of risk aversion and shortfall constraint will be estimated based on your answers.', style = paragraph_style),
+                        html.Div(id='output-quest-button5',
+                                    children='Press submit'),
+                        html.Div(id='output-quest-button6',
+                                    children=''),
+                        html.Button('Submit', id='quest-button'),
+                        html.Button('Proceed', id='proceed-button'),      
                 ]),
-        html.Label(['Which of the following two options would you choose?', 
-                dcc.Dropdown(
-                    id = 'quest3',
-                        placeholder='Select an option'
-                                )
-                ]),
-        html.Label(['Which of the following two options would you choose?', 
-                dcc.Dropdown(
-                    id = 'quest4',
-                        placeholder='Select an option'
-                                )
-                ]),
-        html.Label(["We toss a coin once. Would you accept the following agreement? Heads, you win $ 1'500. Tails, you lose $ 1'000", 
-                dcc.Dropdown(
-                    id = 'quest5',
-                        placeholder='Select an option'
-                                )
-                ]),
-        html.P('The next question is about your shortfall risk constraint. Here it is defined the level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
-        html.Label(['How much of your investment (in percentage) you would be willing to risk in one month in the worst case scenario (1% of probability to occur)?', 
-                dcc.Dropdown(
-                    id = 'quest6',
-                    options=[
-                            {'label': 'I would be willing to risk no more than 20%', 'value': -0.20},
-                            {'label': 'I would be willing to risk no more than 10%', 'value': -0.10},
-                            {'label': 'I would be willing to risk no more than 5%', 'value': -0.05},
-                            ],
-                        placeholder='Select an option'
-                                )
-                ]),
-            html.P('By clicking on "Submitt" below, the coefficient of risk aversion and shortfall constraint will be estimated based on your answers.', style = paragraph_style),
-            html.Div(id='output-quest-button5',
-                    children='Press submit'),
-            html.Div(id='output-quest-button6',
-                    children=''),
-            html.Button('Submit', id='quest-button'),
-            html.H3('Recommendation', style=text_style),
-            html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-            html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
-            dcc.Graph(
-                id='efficient_frontier',
-                ),
-            
-            html.H5('Portfolio Weights', style=text_style),
-            html.P('Allocation of weights for each asset class in percentage points.', style=paragraph_style),
-            dash_table.DataTable(
-                id = 'table',
-                data = [{}],
-                columns = [{"name": i, "id": i} for i in ['Portfolio', 'US Equity', 'Treasury Bonds', 'Real Estate','Commodities', 'ESG', 'Risk Free Rate']],
-                style_table = {'width': '100%'},
-                style_cell={
-                    'overflow': 'hidden',
-                    'textOverflow': 'ellipsis',
-                    'maxWidth': 0,}
-            ),
-            html.H6('Portfolio Risk Analysis', style=text_style),
-            html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
-            html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
-            html.P(id = 'risk_paragraph1', style=paragraph_style),
-            dcc.RadioItems(
-                id = 'port_select'), 
- 
-            dcc.Graph(
-                id = 'risk',
-            ),
-            html.H6('Historical Monthly Portfolio Returns from January 2006 to December 2019', style=subtext_style),
-            dcc.Graph(
-            id='port_performance',      
-            ),
-            html.P('Disclaimer: This application is part of the Field Project on Data Science of Barbara Silva de Almeida from Neuchatel University. The use of this content is exclusively for university purposes.', style=disclaimer_style),
+                dcc.Tab( id = 'tab2', value = 'tab-2', label='Recommendation', children=[ 
+                        html.H1('Robo-Advisor: Portfolio Management Application', style={'font-size': '32px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#3D81AF'}),
+                        dcc.Graph(
+                                id='assets_price_hist',
+                                            figure = {
+                                                    'data': [
+                                                        {'x': annual_return.index,
+                                                        'y': annual_return[Assets[0]], 
+                                                        'type': 'line', 
+                                                        'name': Assets[0], 
+                                                        'color':color_line[0],
+                                                        'showlegend': True, 
+                                                        },
+                                                        {'x': annual_return.index,
+                                                        'y': annual_return[Assets[1]], 
+                                                        'type': 'line', 
+                                                        'name': Assets[1], 
+                                                        'color':color_line[1],
+                                                        'showlegend': True, 
+                                                        },
+                                                        {'x': annual_return.index,
+                                                        'y': annual_return[Assets[2]], 
+                                                        'type': 'line', 
+                                                        'name': Assets[2], 
+                                                        'color':color_line[2],
+                                                        'showlegend': True, 
+                                                        },
+                                                        {'x': annual_return.index,
+                                                        'y': annual_return[Assets[3]], 
+                                                        'type': 'line', 
+                                                        'name': Assets[3], 
+                                                        'color':color_line[3],
+                                                        'showlegend': True, 
+                                                        },
+                                                        {'x': annual_return.index,
+                                                        'y': annual_return[Assets[4]], 
+                                                        'type': 'line', 
+                                                        'name': Assets[4], 
+                                                        'color':color_line[4],
+                                                        'showlegend': True, 
+                                                        },
+
+                                                            ],
+                                                'layout': {
+                                                    'title' :'Historical Annual Rolling Returns of Asset Classes from December 2006 to March 2020',
+                                                    'titlefont': dict(
+                                                                    family = 'verdana',
+                                                                    size = 24,
+                                                                    color = '#7F90AC'),
+                                                    'xaxis': dict(
+                                                        rangeselector=dict(
+                                                            buttons=list([
+                                                                dict(count=1,
+                                                                    label='1m',
+                                                                    step='month',
+                                                                    stepmode='backward'),
+                                                                dict(count=6,
+                                                                    label='6m',
+                                                                    step='month',
+                                                                    stepmode='backward'),
+                                                                dict(count=1,
+                                                                    label='YTD',
+                                                                    step='year',
+                                                                    stepmode='todate'),
+                                                                dict(count=1,
+                                                                    label='1y',
+                                                                    step='year',
+                                                                    stepmode='backward'),
+                                                                dict(step='all')
+                                                                ])
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            ),
+                        html.H3('Recommendation', style=text_style),
+                        html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
+                        html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
+                        dcc.Graph(
+                                id='efficient_frontier',
+                                ),
+                        html.H5('Portfolio Weights', style=text_style),
+                        html.P('Allocation of weights for each asset class in percentage points.', style=paragraph_style),
+                        dash_table.DataTable(
+                                id = 'table',
+                                data = [{}],
+                                columns = [{"name": i, "id": i} for i in ['Portfolio', 'US Equity', 'Treasury Bonds', 'Real Estate','Commodities', 'ESG', 'Risk Free Rate']],
+                                style_table = {'width': '100%'},
+                                style_cell={
+                                    'overflow': 'hidden',
+                                    'textOverflow': 'ellipsis',
+                                    'maxWidth': 0,}
+                            ),
+                        html.H6('Portfolio Risk Analysis', style=text_style),
+                        html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
+                        html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
+                        html.P(id = 'risk_paragraph1', style=paragraph_style),
+                        dcc.RadioItems(
+                                id = 'port_select'),
+                        dcc.Graph(
+                                id = 'risk',
+                        ),
+                        html.H6('Historical Monthly Portfolio Returns from January 2006 to December 2019', style=subtext_style),
+                        dcc.Graph(
+                                id='port_performance',
+                        ),
+                        html.P('Disclaimer: This application is part of the Field Project on Data Science of Barbara Silva de Almeida from Neuchatel University. The use of this content is exclusively for university purposes.', style=disclaimer_style),
                 ])
-            
+        ]),
+])
+
+@app.callback(
+    Output(component_id='tabs', component_property='value'),
+     [Input('proceed-button', 'n_clicks')],
+ )
+def switch_tab(click):
+     if click:
+        return 'tab-2'          
 
 @app.callback(
     dash.dependencies.Output('quest2','options'),
