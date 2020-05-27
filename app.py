@@ -66,7 +66,7 @@ app.layout = html.Div([
                     
                             ],
                 'layout': {
-                    'title' :'Historical Annual Rolling Returns of Asset Classes from December 2010 to March 2020',
+                    'title' :'Historical Annual Rolling Returns of Asset Classes from December 2006 to March 2020',
                     'titlefont': dict(
                                     family = 'verdana',
                                     size = 24,
@@ -185,7 +185,7 @@ app.layout = html.Div([
             dcc.Graph(
                 id = 'risk',
             ),
-            html.H6('Historical Monthly Portfolio Returns from January 2010 to December 2020', style=subtext_style),
+            html.H6('Historical Monthly Portfolio Returns from January 2006 to December 2019', style=subtext_style),
             dcc.Graph(
             id='port_performance',      
             ),
