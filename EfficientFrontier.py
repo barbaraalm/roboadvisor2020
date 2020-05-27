@@ -249,8 +249,8 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
             name = 'Minimum Variance',
             mode='markers',
             marker_symbol='star',
-            x=[X[np.argmin(X)]],
-            y=[Y[np.argmin(X)]],
+            x= [mv_vol],
+            y=[mv_ret],
             marker=dict(
                 color='Blue',
                 size=14,
