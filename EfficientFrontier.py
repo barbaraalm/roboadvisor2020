@@ -200,7 +200,7 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     layout = Layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        #width= 1000,
+        width= 900,
         xaxis_title='Volatility',
         yaxis_title='Return',
         legend_orientation="h"
@@ -249,8 +249,8 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
             name = 'Minimum Variance',
             mode='markers',
             marker_symbol='star',
-            x= [mv_vol],
-            y=[mv_ret],
+            x= [X[[np.argmin(X)]]],
+            y=[Y[[np.argmin(X)]]],
             marker=dict(
                 color='Blue',
                 size=14,
