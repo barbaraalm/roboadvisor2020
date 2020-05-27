@@ -16,7 +16,7 @@ annual_return = close_price[Assets].pct_change(252)
 risk_free = pd.read_json("RiskFreeRate.json")
 risk_free.index = pd.to_datetime(risk_free.index)
 
-daily_rf = risk_free['rf_daily']
+#daily_rf = risk_free['rf_daily']
 annual_rf = risk_free['rf_annual']
 
 
