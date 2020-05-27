@@ -203,8 +203,11 @@ app.layout = html.Div([
      [Input('proceed-button', 'n_clicks')],
  )
 def switch_tab(click):
-     if click:
-        return 'tab-2'          
+    if click:
+        value = 'tab-2'
+    else:
+        value = 'tab-1'
+    return value         
 
 @app.callback(
     dash.dependencies.Output('quest2','options'),
