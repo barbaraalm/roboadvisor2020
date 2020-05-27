@@ -95,7 +95,7 @@ X, Y, w = eff_portfolio_perf(mu, sigma, target_ret)
 
 ## Maximum Sharpe Ratio Portfolio:
 
-sr_weights = np.round(weights[np.argmax(p_perf[2])]*100,2)
+sr_weights = np.round(weights[np.argmax(p_perf[2])]*100)
 
 sr_ret = p_perf[1][np.argmax(p_perf[2])]
 
@@ -103,14 +103,14 @@ sr_vol = p_perf[0][np.argmax(p_perf[2])]
 
 ## Minimum Variance Portfolio:
 
-mv_weights = np.round(weights[np.argmin(p_perf[0])]*100,2)
+mv_weights = np.round(weights[np.argmin(p_perf[0])]*100)
 
 mv_ret = p_perf[1][np.argmin(p_perf[0])]
 
 mv_vol = p_perf[0][np.argmin(p_perf[0])]
 
 def table_weights(rel_risk_aversion):
-    crra_w = np.round(crra_weights(rel_risk_aversion)*100,2)
+    crra_w = np.round(crra_weights(rel_risk_aversion)*100)
 
     if len(crra_w) == 5: 
         rf_crra = 0
