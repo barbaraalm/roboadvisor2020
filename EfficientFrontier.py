@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import math
-from AssetClassesData import close_price, daily_return, daily_rf, annual_rf
+from AssetClassesData import close_price, daily_return, annual_rf
 
 ##### Define variables below:
 #min allocation in each asset ( if 0 no short selling allowed)
@@ -89,7 +89,7 @@ def eff_portfolio_perf(mu, sigma, target_ret):
 
 mu, sigma, num_assets =  port_parameters(close_price)
 
-p_perf, weights = gen_random_portfolios(num_portfolios, mu, sigma, daily_rf.mean())
+p_perf, weights = gen_random_portfolios(num_portfolios, mu, sigma, annual_rf.mean())
 
 X, Y, w = eff_portfolio_perf(mu, sigma, target_ret)
 
