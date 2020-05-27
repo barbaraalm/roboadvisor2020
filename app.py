@@ -31,54 +31,57 @@ app.layout = html.Div([
                         html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
                         html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
                         html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
-                        html.Label(['We toss a coin once. You may choose one of the following two options:',
+                        html.Label('We toss a coin once. You may choose one of the following two options:', style = {'font-family': 'verdana', 'font-size': '14px'})
                                 dcc.Dropdown(
                                     id = 'quest1',
-                                 #   style = {'font-family': 'verdana'},
+                                    style = {'font-family': 'verdana', 'font-size': '14px'},
                                     options=[
                                             {'label': "You receive $ 1'000 with either heads or tails", 'value': 0},
                                             {'label': "With heads you receive $ 2'000, with tails you don't receive anything at all.", 
                                             'value': 4},
                                             ],
                                         placeholder='Select an option'
-                                                )
-                                    ]),
-                        html.Label(['Which of the following two options would you choose?', 
+                                ),
+                        html.Label('Which of the following two options would you choose?', style = {'font-family': 'verdana', 'font-size': '14px'})
                                 dcc.Dropdown(
                                     id = 'quest2',
+                                        style = {'font-family': 'verdana', 'font-size': '14px'},
                                         placeholder='Select an option'
-                                                )
-                                ]),
-                        html.Label(['Which of the following two options would you choose?', 
+                                ),
+                        html.Label('Which of the following two options would you choose?',style = {'font-family': 'verdana', 'font-size': '14px'})
                                 dcc.Dropdown(
                                     id = 'quest3',
+                                        style = {'font-family': 'verdana', 'font-size': '14px'},
                                         placeholder='Select an option'
-                                                )
-                                ]),
-                        html.Label(['Which of the following two options would you choose?', 
+                                                
+                                ),
+                        html.Label('Which of the following two options would you choose?',style = {'font-family': 'verdana', 'font-size': '14px'}),
                                 dcc.Dropdown(
                                     id = 'quest4',
+                                        style = {'font-family': 'verdana', 'font-size': '14px'},
                                         placeholder='Select an option'
-                                                )
-                                ]),
-                        html.Label(["We toss a coin once. Would you accept the following agreement? Heads, you win $ 1'500. Tails, you lose $ 1'000", 
+                                                
+                                ),
+                        html.Label("We toss a coin once. Would you accept the following agreement? Heads, you win $ 1'500. Tails, you lose $ 1'000",style = {'font-family': 'verdana', 'font-size': '14px'}), 
                                 dcc.Dropdown(
                                     id = 'quest5',
+                                        style = {'font-family': 'verdana', 'font-size': '14px'},
                                         placeholder='Select an option'
-                                                )
-                                ]),
+                                                
+                                ),
                         html.P('The next question is about your shortfall risk constraint. Here it is defined the level of risk accepted in case a rare disaster event occurs. The expected shortfall risk is estimated at 99% confidence interval.',style=paragraph_style),
-                        html.Label(['How much of your investment (in percentage) you would be willing to risk in one month in the worst case scenario (1% of probability to occur)?', 
+                        html.Label('How much of your investment (in percentage) you would be willing to risk in one month in the worst case scenario (1% of probability to occur)?', style = {'font-family': 'verdana', 'font-size': '14px'}), 
                                 dcc.Dropdown(
                                     id = 'quest6',
+                                        style = {'font-family': 'verdana', 'font-size': '14px'},
                                     options=[
                                             {'label': 'I would be willing to risk no more than 20%', 'value': -0.20},
                                             {'label': 'I would be willing to risk no more than 10%', 'value': -0.10},
                                             {'label': 'I would be willing to risk no more than 5%', 'value': -0.05},
                                             ],
                                         placeholder='Select an option'
-                                                )
-                                ]),
+                                                
+                                ),
                         html.P('By clicking on "Submitt" below, the coefficient of risk aversion and shortfall constraint will be estimated based on your answers.', style = paragraph_style),
                         html.Div(id='output-quest-button5',
                                     children='Press submit'),
