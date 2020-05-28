@@ -9,12 +9,11 @@ from dash_core_components import Dropdown, Slider, RadioItems
 import dash_table
 from pandas_datareader import data as web
 from AssetClassesData import close_price, annual_return, Assets
-from EfficientFrontier import X, Y, p_perf, plot_portfolios, table_weights
 from Risk import plot_risk, risk_aversion, port_perf_data
+from EfficientFrontier import X, Y, p_perf, plot_portfolios, table_weights
 
 app = dash.Dash(__name__)
 server = app.server
-
 
 text_style = {'font-size': '26px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#7F90AC'}
 subtext_style = {'font-size': '20px', 'font-family': 'verdana', 'textAlign': 'left', 'color': '#7F90AC'}
@@ -167,7 +166,7 @@ app.layout = html.Div([
                                             ),
                         html.H3('Recommendation', style=text_style),
                         html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-                        html.P('In this graph there are 3 portfolios recommended (represented by the stars). The allocation weights for each portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
+                        html.P('In this graph the recommended portfolio is represented by the yellow star. The allocation weights for this portfolio is demonstrated in the table right below. You can compare the return vs. risk relation of the optimal recommend portfolio with the Minimum Variance and Tangency Portfolios in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
                         dcc.Graph(
                                 id='efficient_frontier',
                                 ),
@@ -185,10 +184,8 @@ app.layout = html.Div([
                             ),
                         html.H6('Portfolio Risk Analysis', style=text_style),
                         html.H6('Distribution of Historical Monthly Portfolio Returns', style=subtext_style),
-                        html.P('Here the risk analysis of the 3 recommended portfolios can be assessed. Please select one of the portfolios to see the probability distribution of the returns.', style=paragraph_style),
+                        html.P('Here the risk analysis of the recommended portfolio can be assessed.', style=paragraph_style),
                         html.P(id = 'risk_paragraph1', style=paragraph_style),
-                        dcc.RadioItems(
-                                id = 'port_select'),
                         dcc.Graph(
                                 id = 'risk',
                         ),
@@ -285,19 +282,8 @@ def update_table(value):
     return table_weights(risk_aversion(value))
 
 @app.callback(
-    dash.dependencies.Output('port_select','options'),
-    [dash.dependencies.Input('quest5', 'value')])
-def update_port_risk(value):
-    options = [
-        {'label': 'Min Variance Portfolio', 'value': -1},
-        {'label': 'Max Sharpe Ratio Portfolio', 'value': -2},
-        {'label': 'Two-Fund Separation Theorem Portfolio', 'value': value}
-        ]
-    return options
-
-@app.callback(
     dash.dependencies.Output('risk','figure'),
-    [dash.dependencies.Input('port_select', 'value')])
+    [dash.dependencies.Input('quest5', 'value')])
 def update_plot_risk(value):
     return plot_risk(value)
 
