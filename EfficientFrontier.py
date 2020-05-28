@@ -148,25 +148,25 @@ cal_y = []
 for i in range(100):
     cal_y.append(annual_rf.mean() + beta*cal_x[i])
 
-crra_ret = []
-crra_vol = []
+port_line_ret = []
+port_line_vol = []
 for i in range(len(cal_x)):
     if cal_y[i] <= sr_ret:
-        crra_ret.append(cal_y[i])
-        crra_vol.append(cal_x[i])
+        port_line_ret.append(cal_y[i])
+        port_line_vol.append(cal_x[i])
 for i in range(len(Y)):
     if Y[i] > sr_ret:
-        crra_ret.append(Y[i])
-        crra_vol.append(X[i])
+        port_line_ret.append(Y[i])
+        port_line_vol.append(X[i])
 
 # Utility function: CCRA Lognormal case
-def crra_utility(port_return,port_volatility, rel_risk_aversion):
+def ccra_utility(port_return,port_volatility, rel_risk_aversion):
     return math.log(1+port_return) - (rel_risk_aversion/2)*port_volatility**2
 
 def crra_weights(rel_risk_aversion):
     crra = []
     for i in range(len(crra_ret)):
-        crra.append(crra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
+        crra.append(ccra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
     crra_y=[crra_ret[np.argmax(crra)]]
     if crra_y >= sr_ret: 
         crra_weight = w[Y.index(crra_y)]
@@ -200,12 +200,11 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     layout = Layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        width= 900,
+        #width= 1000,
         xaxis_title='Volatility',
         yaxis_title='Return',
-        legend_orientation="h"
+        legend_orientation="h",   
     )
-
     fig_frontier = Figure( layout=layout)
     fig_frontier.add_trace(
         Scatter(
@@ -237,52 +236,36 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     )
     fig_frontier.add_trace(
         Scatter(
-            name= 'Capital Allocation Line',
+            name= 'Feasible Portfolios',
             mode='lines',
-            x = cal_x,
-            y = cal_y,
-          line = dict(color='Blue', width=3),
+            x = port_line_vol,
+            y = port_line_ret,
+          line = dict(color='Blue', width=2),
         )
     )
     fig_frontier.add_trace(
         Scatter(
-            name = 'Minimum Variance',
-            mode='markers',
-            marker_symbol='star',
-            x= [X[[np.argmin(X)]]],
-            y=[Y[[np.argmin(X)]]],
-            marker=dict(
-                color='Blue',
-                size=14,
-                line=dict(
-                    color='Black',
-                    width=2
-                )
-            ),
-            showlegend=True
-        )
-    )   
+            x=[X[np.argmin(X)]],
+            y=[Y[np.argmin(X)]],
+            mode="markers+text",
+            marker= dict(color = 'Black'),
+            name="Minimum Variance Portfolio",
+            text=["MV"],
+            textposition="bottom left"
+            ))  
     fig_frontier.add_trace(
         Scatter(
-            name = 'Max Sharpe Ratio',
-            mode='markers',
             x=[p_perf[0][np.argmax(p_perf[2])]],
             y=[p_perf[1][np.argmax(p_perf[2])]],
-            marker_symbol='star',
-            marker=dict(
-                color='Green',
-                size=14,
-                line=dict(
-                    color='Black',
-                    width=2
-                )
-            ),
-            showlegend=True
-        )
-    )
+            mode="markers+text",
+            marker= dict(color = 'Black'),
+            name="Tangency Portfolio",
+            text=["TP"],
+            textposition="top center"
+            ))  
     crra = []
     for i in range(len(crra_ret)):
-        crra.append(crra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
+        crra.append(ccra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
 
     fig_frontier.add_trace(
         Scatter(
