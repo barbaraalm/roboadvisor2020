@@ -1,164 +1,114 @@
-from AssetClassesData import monthly_return
-from EfficientFrontier import sr_weights, mv_weights, crra_weights
+from AssetClassesData import monthly_return, annual_rf
+from EfficientFrontier import sr_weights, mv_weights, ccra_weights
 import plotly.express as px
 import numpy as np
 import pandas as pd
+import math
 from scipy.stats import norm
 import chart_studio.plotly as py
 from plotly.graph_objs import *
 import plotly.graph_objects as go
 from plotly.validators.scatter.marker import SymbolValidator
 
-### Distribution of daily return:
-
-hist_ret = pd.DataFrame(columns = ['sr', 'mv', 'crra'], index = monthly_return.index)
-
-for i in range(1, len(monthly_return)): # starts in Mar 31, 2008
-    mu = monthly_return.iloc[i,:]
-    hist_ret['sr'][i] = np.sum(mu*sr_weights/100)
-    hist_ret['mv'][i] = np.sum(mu*mv_weights/100)
-
-hist_ret['Date'] = hist_ret.index
-
-### Daily VaR:
-VaR = pd.DataFrame(columns = ['sr', 'mv'], index = ['1%'])
-
-VaR.iloc[0,0] = norm.ppf(1-0.99, np.mean(hist_ret['sr']), np.std(hist_ret['sr']))
-VaR.iloc[0,1] = norm.ppf(1-0.99, np.mean(hist_ret['mv']), np.std(hist_ret['mv']))
-
-def plot_risk(value):
-        if value < 0:
-            if value == -1:
-                port = 'mv'
-                xax = 'Minimum Variance Portfolio Returns'
-            else:
-                port = 'sr'
-                xax = 'Maximum Sharpe Ratio Portfolio Returns'
-
-            fig_risk = px.histogram(hist_ret, x=port, y = 'Date',
-            color_discrete_sequence=['#DC4D37'])
-            fig_risk.add_shape(
-                    go.layout.Shape(type='line', xref='x',
-                                    x0=VaR[port][0], y0=0, x1=VaR[port][0],y1=250, line={'dash': 'dash'}),row=1, col=1, name= "VaR at 99% C.I.")
-            fig_risk.update_layout(height=400, 
-            plot_bgcolor='rgb(236,236,236)', 
-            xaxis_title_text = xax,
-            yaxis_title_text = "Count")
-
-            fig_risk.add_annotation(
-                    x=VaR[port][0],
-                    y=100,
-                    xref="x",
-                    yref="y",
-                    text="99% VaR: {:.02f}%".format(VaR[port][0]*100),
-                    showarrow=True,
-                    font=dict(
-                        family="Courier New, monospace",
-                        size=16,
-                        color="#ffffff"
-                        ),
-                    align="center",
-                    arrowhead=2,
-                    arrowsize=1,
-                    arrowwidth=2,
-                    arrowcolor="#636363",
-                    ax=20,
-                    ay=-30,
-                    bordercolor="#c7c7c7",
-                    borderwidth=2,
-                    borderpad=4,
-                    bgcolor="#ff7f0e",
-                    opacity=0.8
-                    )
-        else:
-            rsk_av = risk_aversion(value)
-            for i in range(1, len(monthly_return)):
-                mu = monthly_return.iloc[i,:]
-                hist_ret['crra'][i] = np.sum(mu*crra_weights(rsk_av))
-
-            VaR_crra = norm.ppf(1-0.99, np.mean(hist_ret['crra']), np.std(hist_ret['crra']))
-            fig_risk = px.histogram(hist_ret, x='crra', y = 'Date',
-
-            color_discrete_sequence=['#DC4D37'])
-            fig_risk.add_shape(
-                go.layout.Shape(type='line', xref='x',
-                            x0=VaR_crra , y0=0, x1=VaR_crra,y1=250, line={'dash': 'dash'}),row=1, col=1, name= "VaR at 99% C.I.")
-            fig_risk.update_layout(height=400, 
-                            plot_bgcolor='rgb(236,236,236)', 
-                            yaxis_title_text = "Count",
-                            xaxis_title_text = "Two-Fund Separation Theorem Portfolio Returns" )
-            fig_risk.add_annotation(
-                    x=VaR_crra,
-                    y=100,
-                    xref="x",
-                    yref="y",
-                    text="99% VaR: {:.02f}%".format(VaR_crra*100),
-                    showarrow=True,
-                    font=dict(
-                        family="Courier New, monospace",
-                        size=16,
-                        color="#ffffff"
-                        ),
-                    align="center",
-                    arrowhead=2,
-                    arrowsize=1,
-                    arrowwidth=2,
-                    arrowcolor="#636363",
-                    ax=20,
-                    ay=-30,
-                    bordercolor="#c7c7c7",
-                    borderwidth=2,
-                    borderpad=4,
-                    bgcolor="#ff7f0e",
-                    opacity=0.8
-                    )
-
-        return fig_risk
+# Distribution of daily return:
+m_ret = pd.concat([monthly_return, annual_rf], axis=1).dropna(subset=['US Equity'])
+m_ret['rf_annual'] = m_ret['rf_annual']/12
 
 def risk_aversion(sum_questionnaire):
     if type(sum_questionnaire) is int:
         if sum_questionnaire < 4:
-            rsk_av = 5
+            rsk_av = 20
         elif sum_questionnaire < 7:
-            rsk_av = 4
+            rsk_av = 16
         elif sum_questionnaire < 10:
-            rsk_av = 3
+            rsk_av = 12
         elif sum_questionnaire <13:
-            rsk_av = 2
+            rsk_av = 8
         else: 
-            rsk_av = 1
+            rsk_av = 4
     return rsk_av
 
+def plot_risk(value):
+    rsk_av = risk_aversion(value)
+    ret = hist_ret(value, m_ret)
+    VaR_ccra = norm.ppf(1-0.99, np.mean(ret['ccra']), np.std(ret['ccra']))
+    fig_risk = px.histogram(
+        ret, 
+        x='ccra', 
+        y = 'Date', 
+        color_discrete_sequence=['#DC4D37']
+        )
+        
+    fig_risk.add_shape(
+        go.layout.Shape(
+            type='line',
+            xref='x',
+            x0=VaR_ccra ,
+            y0=0,
+            x1=VaR_ccra,
+            y1=250,
+            line={'dash': 'dash'}
+            ),
+            row=1,
+            col=1,
+            name= "VaR at 99% C.I."
+            )
+    fig_risk.update_layout(height=400,
+    plot_bgcolor='rgb(236,236,236)', 
+    yaxis_title_text = "Count",
+    xaxis_title_text = "Optimal Portfolio Returns"
+    )
+    fig_risk.add_annotation(
+        x=VaR_ccra,
+        y=100,
+        xref="x",
+        yref="y",
+        text="99% VaR: {:.02f}%".format(VaR_ccra*100),
+        showarrow=True,
+        font=dict(
+        family="Courier New, monospace",
+        size=16,
+            color="#ffffff"
+            ),
+        align="center",
+        arrowhead=2,
+        arrowsize=1,
+        arrowwidth=2,
+        arrowcolor="#636363",
+        ax=20,    
+        ay=-30,
+        bordercolor="#c7c7c7",
+        borderwidth=2,
+        borderpad=4,
+        bgcolor="#ff7f0e",
+        opacity=0.8
+        )
+    return fig_risk
 
-def port_perf_data(sum_questionnaire):
+def hist_ret(sum_questionnaire, m_ret):
     rsk_av = risk_aversion(sum_questionnaire)
+    hist_returns = pd.DataFrame(data=None, index= m_ret.index, columns= ['ccra'])
+    hist_returns['Date'] = hist_returns.index
+    
+    for i in range(len(m_ret)):
+        mu = m_ret.iloc[i,:]
+        hist_returns.iloc[i,0] = np.sum(mu*ccra_weights(rsk_av))
+    
+    return hist_returns
 
-   # A value is trying to be set on a copy of a slice from a DataFrame
-    hist_ret_crra = []
-    for i in range(1, len(monthly_return)):
-        mu = monthly_return.iloc[i,:]
-        hist_ret_crra.append(np.sum(mu*crra_weights(rsk_av)))
-
+def port_perf_data(value):
+    rsk_av = risk_aversion(value)
+    hist_ret_ccra = hist_ret(value, m_ret)
+    cum_ret_ccra = np.cumprod(1 + hist_ret_ccra['ccra'].values) - 1
     figure = {'data': [
-                    {'x': hist_ret.index,
-                    'y': hist_ret['sr'], 
+                    {'x': hist_ret_ccra.index,
+                    'y': hist_ret_ccra['ccra'], 
                     'type': 'line', 
-                    'name': 'Max Sharpe Ratio Portfolio', 
-                    'color':'(0,204,102)',
-                    'showlegend': True,},
-                    {'x': hist_ret.index,
-                    'y': hist_ret['mv'], 
-                    'type': 'line', 
-                    'name': 'Minimum Variance Portfolio', 
-                    'color':'(0,0,255)',
-                    'showlegend': True,},
-                    {'x': hist_ret.index,
-                    'y': hist_ret_crra, 
-                    'type': 'line', 
-                    'name': 'Two-Fund Separation Theorem Portfolio', 
+                    'name': 'Optimal Portfolio', 
                     'color':'(255,255,0)',
                     'showlegend': True,},],
                 'layout': {
+                    'margin': {'l': 10, 'b': 0, 't': 0, 'r': 0},
                  #   'legend': dict(orientation='h', xanchor = 'center'),
                     'xaxis': dict(
                         rangeselector=dict(
@@ -186,5 +136,4 @@ def port_perf_data(sum_questionnaire):
                     }
                 }
     return figure
-
  
