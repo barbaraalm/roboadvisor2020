@@ -167,7 +167,7 @@ app.layout = html.Div([
                                             ),
                         html.H3('Recommendation', style=text_style),
                         html.H4("Markowitz's Mean and Variance Portfolios", style=subtext_style),
-                        html.P('In this graph there are 3 portfolios recommended 3 (represented by the stars). The allocation weights for eaxh portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
+                        html.P('In this graph there are 3 portfolios recommended (represented by the stars). The allocation weights for each portfolio are demonstrated in the table right below. You can compare the return vs. risk relation of each portfolio in the efficient frontier representation. The sharpe ratio of the portfolios are represented by the colors as per bar on the right. ',style=paragraph_style),
                         dcc.Graph(
                                 id='efficient_frontier',
                                 ),
