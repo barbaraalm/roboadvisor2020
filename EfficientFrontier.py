@@ -5,25 +5,27 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import math
+from sympy import symbols, Eq, solve
+import chart_studio.plotly as py
+from plotly.graph_objs import *
+import plotly.graph_objects as go
 from AssetClassesData import close_price, daily_return, annual_rf
-
-#min allocation in each asset ( if 0 no short selling allowed)
-min_allocation = 0
-# max allocation in each asset
-max_allocation = 0.5
-# num portfolios randomly generated:
-num_portfolios = 10000
 
 # range of target returns for the efficient frontier:
 target_ret = 0.15
 range_target_ret = np.linspace(0, 0.20, 50)
 
-def gen_random_portfolios(num_portfolios, mu, sigma, rf):
+
+# range of target returns for the efficient frontier:
+target_ret = 0.15
+range_target_ret = np.linspace(0, 0.20, 50)
+
+def gen_random_portfolios( mu, sigma, rf):
     weights_record = []
-    for i in range(num_portfolios):
+    for i in range(50000):
         weights = np.random.random(num_assets)
         weights /= np.sum(weights)
-        if np.any(weights > max_allocation):
+        if np.any(weights > [0.7, 0.7, 0.2, 0.2, 0.2 ]):
             pass
         else:
             weights_record.append(weights)
@@ -50,7 +52,7 @@ def port_parameters(close_price):
     num_assets = len(mu)
     return mu, sigma, num_assets
 
-def efficient_returns(mu, sigma, target_ret,max_allocation, min_allocation):
+def efficient_returns(mu, sigma, target_ret):
     num_assets = len(mu)
     args = (mu, sigma)
 
@@ -59,7 +61,7 @@ def efficient_returns(mu, sigma, target_ret,max_allocation, min_allocation):
         
     constraints = ({'type': 'eq', 'fun': lambda x: port_return(x) - target_ret}, #
                    {'type': 'eq', 'fun': lambda x: np.sum(x) - 1}) # sum of weights = 1
-    bounds = tuple(( min_allocation, max_allocation) for asset in range(num_assets))
+    bounds = ((0, 0.7), (0, 0.7), (0, 0.2), (0, 0.2), (0, 0.2))
 
     ef_ret = sco.minimize(portfolio_volatility, num_assets*[1./num_assets,], args=args, method='SLSQP', bounds=bounds, constraints=constraints)
     
@@ -70,7 +72,7 @@ def efficient_frontier(mu, sigma, target_ret):
     range_target_ret = np.linspace(0.03, target_ret, 100)
     for i in range(len(range_target_ret)):
 
-        ef_port.append(efficient_returns(mu, sigma, range_target_ret[i],max_allocation, min_allocation))
+        ef_port.append(efficient_returns(mu, sigma, range_target_ret[i]))
 
     return ef_port
 
@@ -88,10 +90,9 @@ def eff_portfolio_perf(mu, sigma, target_ret):
 
 mu, sigma, num_assets =  port_parameters(close_price)
 
-p_perf, weights = gen_random_portfolios(num_portfolios, mu, sigma, annual_rf.mean())
+p_perf, weights = gen_random_portfolios( mu, sigma, annual_rf.mean())
 
 X, Y, w = eff_portfolio_perf(mu, sigma, target_ret)
-
 
 ## Maximum Sharpe Ratio Portfolio:
 
@@ -110,34 +111,15 @@ mv_ret = p_perf[1][np.argmin(p_perf[0])]
 mv_vol = p_perf[0][np.argmin(p_perf[0])]
 
 def table_weights(rel_risk_aversion):
-    crra_w = np.round(crra_weights(rel_risk_aversion)*100)
+    ccra_w = np.round(ccra_weights(rel_risk_aversion)*100)
 
-    if len(crra_w) == 5: 
-        rf_crra = 0
-    else:
-        rf_crra = crra_w[5]
-
-    port_weights = [{'Portfolio': 'Max Sharpe Ratio',
-                    'US Equity': sr_weights[0],
-                    'Treasury Bonds': sr_weights[1],
-                    'Real Estate': sr_weights[2],
-                    'Commodities': sr_weights[3],
-                    'ESG': sr_weights[4],
-                    'Risk Free Rate': 0},
-                    {'Portfolio': 'Min Variance',
-                    'US Equity': mv_weights[0],
-                    'Treasury Bonds': mv_weights[1],
-                    'Real Estate': mv_weights[2],
-                    'Commodities': mv_weights[3],
-                    'ESG': sr_weights[4],
-                    'Risk Free Rate': 0},
-                    {'Portfolio': 'Two-Fund Portfolio',
-                    'US Equity': crra_w[0],
-                    'Treasury Bonds': crra_w[1],
-                    'Real Estate': crra_w[2],
-                    'Commodities': crra_w[3],
-                    'ESG': crra_w[4],
-                    'Risk Free Rate': rf_crra}]
+    port_weights = [{'Portfolio': 'Optimal Portfolio',
+                    'US Equity': ccra_w[0],
+                    'Treasury Bonds': ccra_w[1],
+                    'Real Estate': ccra_w[2],
+                    'Commodities': ccra_w[3],
+                    'ESG': ccra_w[4],
+                    'Risk Free Rate': ccra_w[5]}]
 
     return port_weights
 
@@ -163,39 +145,33 @@ for i in range(len(Y)):
 def ccra_utility(port_return,port_volatility, rel_risk_aversion):
     return math.log(1+port_return) - (rel_risk_aversion/2)*port_volatility**2
 
-def crra_weights(rel_risk_aversion):
-    crra = []
-    for i in range(len(crra_ret)):
-        crra.append(ccra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
-    crra_y=[crra_ret[np.argmax(crra)]]
-    if crra_y >= sr_ret: 
-        crra_weight = w[Y.index(crra_y)]
+def ccra_weights(rel_risk_aversion):
+    ccra = []
+    for i in range(len(port_line_ret)):
+        ccra.append(ccra_utility(port_line_ret[i], port_line_vol[i] , rel_risk_aversion))
+    ccra_y=[port_line_ret[np.argmax(ccra)]]
+    if ccra_y >= sr_ret: 
+        ccra_weight = w[Y.index(ccra_y)]
+        ccra_weight = np.append(ccra_weight, 0)
     else:
-        crra_weight = cal_weights(sr_ret,annual_rf.mean(),crra_y)
-    return crra_weight
+        ccra_weight = cal_weights(sr_ret,annual_rf.mean(),ccra_y)
+    return ccra_weight
             
-def cal_weights(sr_ret,rf, crra_y):
-    mu_crra = sr_ret , rf
-    def objective(weight):
-        ret = (weight[0]*mu_crra[0]) + (weight[1]*mu_crra[1])
-        return ret - crra_y
+def cal_weights(sr_ret,rf, ccra_y):
+    x, y = symbols('x y')
+    eq1 = Eq((x*sr_ret) + (y*rf) - ccra_y[0])
+    eq2 = Eq(x + y - 1)
 
-    constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1}) # sum of weights = 1
-    bounds = tuple(( 0, 1) for asset in range(2))
-    p_ret = sco.minimize(objective, [0.5, 0.5], method='SLSQP', constraints=constraints, bounds = bounds)
-    weights = p_ret['x']
-    return weights
+    weights = solve((eq1,eq2), (x, y))
 
-# Efficient Frontier Plot
+    port_w = sr_weights/100*float(weights[x])
+    port_w = np.append(port_w, float(weights[y]))
+    
+    return port_w
 
-import chart_studio.plotly as py
-from plotly.graph_objs import *
-import plotly.graph_objects as go
-
+#Plot Efficient Frontier
 py.sign_in('barbaraalm', 'dSt5JOv1kQ5GOmCzLvm2')
 
-
-#Plot:
 def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     layout = Layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -263,16 +239,16 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
             text=["TP"],
             textposition="top center"
             ))  
-    crra = []
-    for i in range(len(crra_ret)):
-        crra.append(ccra_utility(crra_ret[i], crra_vol[i] , rel_risk_aversion))
+    ccra = []
+    for i in range(len(port_line_ret)):
+        ccra.append(ccra_utility(port_line_ret[i], port_line_vol[i] , rel_risk_aversion))
 
     fig_frontier.add_trace(
         Scatter(
-            name = 'Two-Fund Separation Theorem Portfolio ',
+            name = 'Optimal Portfolio',
             mode='markers',
-            x=[crra_vol[np.argmax(crra)]],
-            y=[crra_ret[np.argmax(crra)]],
+            x=[port_line_vol[np.argmax(ccra)]],
+            y=[port_line_ret[np.argmax(ccra)]],
             marker_symbol='star',
             marker=dict(
                 color='Yellow',
@@ -286,4 +262,3 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
         )
     )
     return fig_frontier
-
