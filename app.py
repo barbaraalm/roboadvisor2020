@@ -45,12 +45,24 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id = 'quest2',
                                         style = {'font-family': 'verdana', 'font-size': '14px'},
+                                            options=[
+                                                    {'label': "You draw a lottery ticket with an 80% chance to win $ 45 (if you loose, you don't get anything at all)", 
+                                                     'value': 3},
+                                                    {'label': 'You win $ 30, no matter which ticket is drawn.', 
+                                                     'value': 0},
+                                            ],
                                         placeholder='Select an option'
                                 ),
                         html.Label('Which of the following two options would you choose?',style = {'font-family': 'verdana', 'font-size': '14px'}),
                                 dcc.Dropdown(
                                     id = 'quest3',
                                         style = {'font-family': 'verdana', 'font-size': '14px'},
+                                            options=[
+                                                    {'label': "You draw a lottery ticket with a 25% chance to win $ 100 (if you loose, you don't get anything at all)",
+                                                     'value': 0},
+                                                    {'label': "You draw a lottery ticket with a 20% chance to win $ 130 (if you loose, you don't get anything at all)",
+                                                     'value': 2},
+                                            ],
                                         placeholder='Select an option'
                                                 
                                 ),
@@ -58,6 +70,12 @@ app.layout = html.Div([
                                 dcc.Dropdown(
                                     id = 'quest4',
                                         style = {'font-family': 'verdana', 'font-size': '14px'},
+                                            options=[
+                                                    {'label': "You draw a lottery ticket with a 2% chance of winning $ 3000 (if you loose, you don't get anything at all)",
+                                                    'value': 0},
+                                                    {'label': "You draw a lottery ticket with a 1% chance of winning $ 6000 (if you loose, you don't get anything at all)",
+                                                     'value':1},
+                                            ],
                                         placeholder='Select an option'
                                                 
                                 ),
@@ -210,44 +228,18 @@ def switch_tab(click):
     return value         
 
 @app.callback(
-    dash.dependencies.Output('quest2','options'),
-   [dash.dependencies.Input('quest1','value')] 
-)
-def update_quest2(value):
-    options=[
-        {'label': "You draw a lottery ticket with an 80% chance to win $ 45 (if you loose, you don't get anything at all)", 'value': 3+value},
-        {'label': 'You win $ 30, no matter which ticket is drawn.', 'value': value},]
-    return options
-@app.callback(
-    dash.dependencies.Output('quest3','options'),
-   [dash.dependencies.Input('quest2','value')] 
-)
-def update_quest3(value):
-    options=[
-        {'label': "You draw a lottery ticket with a 25% chance to win $ 100 (if you loose, you don't get anything at all)", 'value': value},
-        {'label': "You draw a lottery ticket with a 20% chance to win $ 130 (if you loose, you don't get anything at all)", 'value': 2+value},
-        ]
-    return options
-
-@app.callback(
-    dash.dependencies.Output('quest4','options'),
-   [dash.dependencies.Input('quest3','value')] 
-)
-def update_quest4(value):
-    options=[
-        {'label': "You draw a lottery ticket with a 2% chance of winning $ 3000 (if you loose, you don't get anything at all)", 'value': value},
-        {'label': "You draw a lottery ticket with a 1% chance of winning $ 6000 (if you loose, you don't get anything at all)", 'value': value+1},
-        ]
-    return options
-
-@app.callback(
     dash.dependencies.Output('quest5','options'),
-   [dash.dependencies.Input('quest4','value')] 
+    [dash.dependencies.Input('quest4', 'value')],
+    state =[dash.dependencies.State('quest1','value'), 
+   dash.dependencies.State('quest2','value'),
+   dash.dependencies.State('quest3','value'),
+   dash.dependencies.State('quest4','value')] 
 )
-def update_quest5(value):
+def update_quest5(value, quest1, quest2, quest3, quest4):
+    sum_q = quest1 + quest2 + quest3 + quest4
     options=[
-        {'label': "Yes", 'value': risk_aversion(5+value)},
-        {'label': "No", 'value': risk_aversion(value)},
+        {'label': "Yes", 'value': risk_aversion(5+sum_q)},
+        {'label': "No", 'value': risk_aversion(sum_q)},
         ]
     return options
 
