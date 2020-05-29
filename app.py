@@ -256,7 +256,7 @@ def update_quest5(value):
     [dash.dependencies.Input('quest-button', 'n_clicks')],
     [dash.dependencies.State('quest5', 'value')])
 def update_output_quest2(n_clicks, value):
-    return 'Your coefficient of risk aversion is "{}". In a scale of 1 (low risk aversion) to 5 (high risk aversion). '.format(
+    return 'Your coefficient of risk aversion is "{}". In a scale of 4 (low risk aversion) to 20 (high risk aversion). '.format(
         risk_aversion(value)
     )
 
