@@ -41,13 +41,13 @@ app.layout = html.Div([
                                             ],
                                         placeholder='Select an option'
                                 ),
-                        html.Label('Which of the following two options would you choose?', style = {'font-family': 'verdana', 'font-size': '14px'})
+                        html.Label('Which of the following two options would you choose?', style = {'font-family': 'verdana', 'font-size': '14px'}),
                                 dcc.Dropdown(
                                     id = 'quest2',
                                         style = {'font-family': 'verdana', 'font-size': '14px'},
                                         placeholder='Select an option'
                                 ),
-                        html.Label('Which of the following two options would you choose?',style = {'font-family': 'verdana', 'font-size': '14px'})
+                        html.Label('Which of the following two options would you choose?',style = {'font-family': 'verdana', 'font-size': '14px'}),
                                 dcc.Dropdown(
                                     id = 'quest3',
                                         style = {'font-family': 'verdana', 'font-size': '14px'},
