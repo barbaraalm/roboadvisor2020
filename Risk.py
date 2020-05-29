@@ -31,6 +31,16 @@ def risk_aversion(sum_questionnaire):
             rsk_av = 4
     return rsk_av
 
+def hist_ret(value, m_ret):
+    rsk_av = value
+    hist_returns = pd.DataFrame(data=None, index= m_ret.index, columns= ['ccra'])
+    hist_returns['Date'] = hist_returns.index
+    
+    for i in range(len(m_ret)):
+        mu = m_ret.iloc[i,:]
+        hist_returns.iloc[i,0] = np.sum(mu*ccra_weights(rsk_av))
+    
+    return hist_returns
 def plot_risk(value):
     rsk_av = value
     ret = hist_ret(value, m_ret)
@@ -73,31 +83,21 @@ def plot_risk(value):
         size=16,
             color="#ffffff"
             ),
-        align="center",
-        arrowhead=2,
-        arrowsize=1,
-        arrowwidth=2,
-        arrowcolor="#636363",
-        ax=20,    
-        ay=-30,
-        bordercolor="#c7c7c7",
-        borderwidth=2,
-        borderpad=4,
-        bgcolor="#ff7f0e",
-        opacity=0.8
-        )
-    return fig_risk
+            align="center",
+            arrowhead=2,
+            arrowsize=1,
+            arrowwidth=2,
+            arrowcolor="#636363",
+            ax=20,    
+            ay=-30,
+            bordercolor="#c7c7c7",
+            borderwidth=2,
+            borderpad=4,
+            bgcolor="#ff7f0e",
+            opacity=0.8
+            )
 
-def hist_ret(value, m_ret):
-    rsk_av = value
-    hist_returns = pd.DataFrame(data=None, index= m_ret.index, columns= ['ccra'])
-    hist_returns['Date'] = hist_returns.index
-    
-    for i in range(len(m_ret)):
-        mu = m_ret.iloc[i,:]
-        hist_returns.iloc[i,0] = np.sum(mu*ccra_weights(rsk_av))
-    
-    return hist_returns
+    return fig_risk
 
 def port_perf_data(value):
     hist_ret_ccra = hist_ret(value, d_ret)
