@@ -215,7 +215,7 @@ def switch_tab(click):
 )
 def update_quest2(value):
     options=[
-        {'label': "You draw a lottery ticket with an 80% chance to win $ 45 (if you loose, you don't get anything at all)", 'value': value+3},
+        {'label': "You draw a lottery ticket with an 80% chance to win $ 45 (if you loose, you don't get anything at all)", 'value': 3+value},
         {'label': 'You win $ 30, no matter which ticket is drawn.', 'value': value},]
     return options
 @app.callback(
@@ -225,7 +225,7 @@ def update_quest2(value):
 def update_quest3(value):
     options=[
         {'label': "You draw a lottery ticket with a 25% chance to win $ 100 (if you loose, you don't get anything at all)", 'value': value},
-        {'label': "You draw a lottery ticket with a 20% chance to win $ 130 (if you loose, you don't get anything at all)", 'value': value+2},
+        {'label': "You draw a lottery ticket with a 20% chance to win $ 130 (if you loose, you don't get anything at all)", 'value': 2+value},
         ]
     return options
 
@@ -246,7 +246,7 @@ def update_quest4(value):
 )
 def update_quest5(value):
     options=[
-        {'label': "Yes", 'value': risk_aversion(value+5)},
+        {'label': "Yes", 'value': risk_aversion(5+value)},
         {'label': "No", 'value': risk_aversion(value)},
         ]
     return options
@@ -271,34 +271,37 @@ def update_output_quest3(n_clicks, value):
 
 @app.callback(
     dash.dependencies.Output('efficient_frontier','figure'),
-    [dash.dependencies.Input('quest5', 'value')])
-def update_plot(value):
+    [dash.dependencies.Input('quest-button', 'n_clicks')],
+    [dash.dependencies.State('quest5', 'value')])
+def update_ef(n_clicks, value):
     return plot_portfolios(value, X, Y, p_perf)
 
 @app.callback(
     dash.dependencies.Output('table','data'),
-    [dash.dependencies.Input('quest5', 'value')])
-def update_table(value):
+    [dash.dependencies.Input('quest-button', 'n_clicks')],
+    [dash.dependencies.State('quest5', 'value')])
+def update_table(n_clicks, value):
     return table_weights(value)
 
 @app.callback(
     dash.dependencies.Output('risk','figure'),
-    [dash.dependencies.Input('quest5', 'value')])
-def update_plot_risk(value):
+    [dash.dependencies.Input('quest-button', 'n_clicks')],
+    [dash.dependencies.State('quest5', 'value')])
+def update_plot_risk(n_clicks, value):
     return plot_risk(value)
 
 @app.callback(
     Output('risk_paragraph1','children'),
-    [dash.dependencies.Input('quest6', 'value')])
-def update_paragraph1(value):
+    [dash.dependencies.Input('quest-button', 'n_clicks')],
+    [dash.dependencies.State('quest6', 'value')])
+def update_paragraph1(n_clicks, value):
     return 'You can compare your shortfall constraint of "{}"% to the value at risk (VaR) of each portfolio.'.format(
-        value*100
+        100*value 
     )
 
 @app.callback(
     dash.dependencies.Output('port_performance','figure'),
-    [dash.dependencies.Input('quest5', 'value')])
-def update_plot_perf(value):
+    [dash.dependencies.Input('quest-button', 'n_clicks')],
+    [dash.dependencies.State('quest-button', 'n_clicks')])
+def update_plot_perf(n_clicks, value):
     return port_perf_data(value)
-
-
