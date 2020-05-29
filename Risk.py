@@ -32,7 +32,7 @@ def risk_aversion(sum_questionnaire):
     return rsk_av
 
 def plot_risk(value):
-    rsk_av = risk_aversion(value)
+    rsk_av = value
     ret = hist_ret(value, m_ret)
     VaR_ccra = norm.ppf(1-0.99, np.mean(ret['ccra']), np.std(ret['ccra']))
     fig_risk = px.histogram(
@@ -88,8 +88,8 @@ def plot_risk(value):
         )
     return fig_risk
 
-def hist_ret(sum_questionnaire, m_ret):
-    rsk_av = risk_aversion(sum_questionnaire)
+def hist_ret(value, m_ret):
+    rsk_av = value
     hist_returns = pd.DataFrame(data=None, index= m_ret.index, columns= ['ccra'])
     hist_returns['Date'] = hist_returns.index
     
