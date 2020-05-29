@@ -189,7 +189,7 @@ app.layout = html.Div([
                         dcc.Graph(
                                 id = 'risk',
                         ),
-                        html.H6('Historical Monthly Portfolio Returns from January 2006 to December 2019', style=subtext_style),
+                        #html.H6('Historical Monthly Portfolio Returns from January 2006 to December 2019', style=subtext_style),
                         dcc.Graph(
                                 id='port_performance',
                         ),
