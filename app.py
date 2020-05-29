@@ -12,7 +12,7 @@ from AssetClassesData import close_price, annual_return, Assets
 from Risk import plot_risk, risk_aversion, port_perf_data
 from EfficientFrontier import X, Y, p_perf, plot_portfolios, table_weights
 
-app = dash.Dash(__name__)
+app = dash.Dash(suppress_callback_exceptions=True)
 server = app.server
 
 text_style = {'font-size': '26px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#7F90AC'}
