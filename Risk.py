@@ -1,4 +1,4 @@
-from AssetClassesData import monthly_return, annual_rf
+from AssetClassesData import monthly_return, annual_rf, daily_return
 from EfficientFrontier import sr_weights, mv_weights, ccra_weights
 import plotly.express as px
 import numpy as np
@@ -13,6 +13,9 @@ from plotly.validators.scatter.marker import SymbolValidator
 # Distribution of daily return:
 m_ret = pd.concat([monthly_return, annual_rf], axis=1).dropna(subset=['US Equity'])
 m_ret['rf_annual'] = m_ret['rf_annual']/12
+
+d_ret = pd.concat([daily_return, annual_rf], axis=1).dropna(subset=['US Equity'])
+d_ret['rf_annual'] = d_ret['rf_annual']/251
 
 def risk_aversion(sum_questionnaire):
     if type(sum_questionnaire) is int:
