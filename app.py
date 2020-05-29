@@ -30,8 +30,8 @@ app.layout = html.Div([
                         html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
                         html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
                         html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
-                        html.Label('We toss a coin once. You may choose one of the following two options:', style = {'font-family': 'verdana', 'font-size': '14px'})
-                                dcc.Dropdown(
+                        html.Label('We toss a coin once. You may choose one of the following two options:', style = {'font-family': 'verdana', 'font-size': '14px'}),
+                        dcc.Dropdown(
                                     id = 'quest1',
                                     style = {'font-family': 'verdana', 'font-size': '14px'},
                                     options=[
