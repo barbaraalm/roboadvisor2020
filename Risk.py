@@ -114,6 +114,11 @@ def port_perf_data(value):
                     'color':'(255,255,0)',
                     'showlegend': True,},],
                 'layout': {
+                    'title' :'Historical Cumulative Daily Returns of Optimal Portfolio allocation from January 2006 to March 2020',
+                    'titlefont': dict(
+                        family = 'verdana',
+                        size = 24,
+                        color = '#7F90AC'),
                     'margin': {'l': 10, 'b': 0, 't': 0, 'r': 0},
                  #   'legend': dict(orientation='h', xanchor = 'center'),
                     'xaxis': dict(
