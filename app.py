@@ -246,8 +246,8 @@ def update_quest4(value):
 )
 def update_quest5(value):
     options=[
-        {'label': "Yes", 'value': value+5},
-        {'label': "No", 'value': value},
+        {'label': "Yes", 'value': risk_aversion(value+5)},
+        {'label': "No", 'value': risk_aversion(value)},
         ]
     return options
 
@@ -257,7 +257,7 @@ def update_quest5(value):
     [dash.dependencies.State('quest5', 'value')])
 def update_output_quest2(n_clicks, value):
     return 'Your coefficient of risk aversion is "{}". In a scale of 4 (low risk aversion) to 20 (high risk aversion). '.format(
-        risk_aversion(value)
+        value
     )
 
 @app.callback(
@@ -273,13 +273,13 @@ def update_output_quest3(n_clicks, value):
     dash.dependencies.Output('efficient_frontier','figure'),
     [dash.dependencies.Input('quest5', 'value')])
 def update_plot(value):
-    return plot_portfolios(risk_aversion(value), X, Y, p_perf)
+    return plot_portfolios(value, X, Y, p_perf)
 
 @app.callback(
     dash.dependencies.Output('table','data'),
     [dash.dependencies.Input('quest5', 'value')])
 def update_table(value):
-    return table_weights(risk_aversion(value))
+    return table_weights(value)
 
 @app.callback(
     dash.dependencies.Output('risk','figure'),
