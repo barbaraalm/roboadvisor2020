@@ -97,12 +97,18 @@ def hist_ret(sum_questionnaire, m_ret):
     return hist_returns
 
 def port_perf_data(value):
-    rsk_av = risk_aversion(value)
-    hist_ret_ccra = hist_ret(value, m_ret)
-    cum_ret_ccra = np.cumprod(1 + hist_ret_ccra['ccra'].values) - 1
+    hist_ret_ccra = hist_ret(value, d_ret)
+    lnret = []
+    for i in range(len(hist_ret_ccra)):
+        lnret.append(math.log(1 + hist_ret_ccra['ccra'][i]))
+
+    hist_ret_ccra['lnret'] = lnret
+
+    cum_daily_return = np.exp(hist_ret_ccra['lnret'].cumsum())
+
     figure = {'data': [
                     {'x': hist_ret_ccra.index,
-                    'y': hist_ret_ccra['ccra'], 
+                    'y': cum_daily_return, 
                     'type': 'line', 
                     'name': 'Optimal Portfolio', 
                     'color':'(255,255,0)',
