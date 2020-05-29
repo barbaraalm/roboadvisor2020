@@ -15,11 +15,6 @@ from AssetClassesData import close_price, daily_return, annual_rf
 target_ret = 0.15
 range_target_ret = np.linspace(0, 0.20, 50)
 
-
-# range of target returns for the efficient frontier:
-target_ret = 0.15
-range_target_ret = np.linspace(0, 0.20, 50)
-
 def gen_random_portfolios( mu, sigma, rf):
     weights_record = []
     for i in range(50000):
