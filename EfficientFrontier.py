@@ -138,7 +138,7 @@ for i in range(len(Y)):
 
 # Utility function: CCRA Lognormal case
 def ccra_utility(port_return,port_volatility, rel_risk_aversion):
-    return math.log(1+port_return) - (rel_risk_aversion/2)*port_volatility**2
+    return (1+port_return) - (rel_risk_aversion/2)*port_volatility**2
 
 def ccra_weights(rel_risk_aversion):
     ccra = []
