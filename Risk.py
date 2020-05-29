@@ -122,7 +122,7 @@ def port_perf_data(value):
                         family = 'verdana',
                         size = 24,
                         color = '#7F90AC'),
-                    'margin': {'l': 10, 'b': 0, 't': 0, 'r': 0},
+                  #  'margin': {'l': 10, 'b': 0, 't': 0, 'r': 0},
                  #   'legend': dict(orientation='h', xanchor = 'center'),
                     'xaxis': dict(
                         rangeselector=dict(
