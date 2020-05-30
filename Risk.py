@@ -5,10 +5,8 @@ import numpy as np
 import pandas as pd
 import math
 from scipy.stats import norm
-import chart_studio.plotly as py
 from plotly.graph_objs import *
 import plotly.graph_objects as go
-from plotly.validators.scatter.marker import SymbolValidator
 
 # Distribution of daily return:
 m_ret = pd.concat([monthly_return, annual_rf], axis=1).dropna(subset=['US Equity'])
@@ -31,19 +29,18 @@ def risk_aversion(sum_questionnaire):
             rsk_av = 4
     return rsk_av
 
-def hist_ret(value, m_ret):
+def hist_ret(value,m_ret):
     rsk_av = value
-    hist_returns = pd.DataFrame(data=None, index= m_ret.index, columns= ['ccra'])
-    hist_returns['Date'] = hist_returns.index
-    
-    for i in range(len(m_ret)):
-        mu = m_ret.iloc[i,:]
-        hist_returns.iloc[i,0] = np.sum(mu*ccra_weights(rsk_av))
-    
+    df = (m_ret*ccra_weights(rsk_av)).fillna(0)
+    ret = df['US Equity'] + df['Treasury Bonds'] + df['Real Estate'] + df['Commodities'] + df['ESG'] + df['rf_annual']
+    hist_returns = pd.DataFrame(data=ret)
+    hist_returns = hist_returns.rename(columns = {0:'ccra'})
     return hist_returns
+
 def plot_risk(value):
     rsk_av = value
     ret = hist_ret(value, m_ret)
+    ret['Date'] = ret.index
     VaR_ccra = norm.ppf(1-0.99, np.mean(ret['ccra']), np.std(ret['ccra']))
     fig_risk = px.histogram(
         ret, 
@@ -121,9 +118,6 @@ def port_perf_data(value):
                     'titlefont': dict(
                         family = 'verdana',
                         size = 24,
-                        color = '#7F90AC'),
-                  #  'margin': {'l': 10, 'b': 0, 't': 0, 'r': 0},
-                 #   'legend': dict(orientation='h', xanchor = 'center'),
                     'xaxis': dict(
                         rangeselector=dict(
                             buttons=list([
