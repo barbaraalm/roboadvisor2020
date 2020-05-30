@@ -3,12 +3,8 @@ import numpy as np
 import scipy.optimize as sco
 import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
-import math
 from sympy import symbols, Eq, solve
-import chart_studio.plotly as py
 from plotly.graph_objs import *
-import plotly.graph_objects as go
 from AssetClassesData import close_price, daily_return, annual_rf
 
 # range of target returns for the efficient frontier:
@@ -165,7 +161,6 @@ def cal_weights(sr_ret,rf, ccra_y):
     return port_w
 
 #Plot Efficient Frontier
-py.sign_in('barbaraalm', 'dSt5JOv1kQ5GOmCzLvm2')
 
 def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
     layout = Layout(
