@@ -29,6 +29,20 @@ def risk_aversion(sum_questionnaire):
             rsk_av = 4
     return rsk_av
 
+def risk_category(value):
+    if type(value) is int:
+        if value < 5:
+            rsk_cat = "Very low risk aversion"
+        elif value < 9:
+            rsk_cat = "Low risk aversion"
+        elif value < 13:
+            rsk_cat = "Moderate risk version"
+        elif value < 17:
+            rsk_cat = "High risk aversion"
+        else: 
+            rsk_cat = "Very high risk aversion"
+    return rsk_cat
+
 def hist_ret(value,m_ret):
     rsk_av = value
     df = (m_ret*ccra_weights(rsk_av)).fillna(0)
