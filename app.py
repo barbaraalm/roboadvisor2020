@@ -9,7 +9,7 @@ from dash_core_components import Dropdown, Slider, RadioItems
 import dash_table
 from pandas_datareader import data as web
 from AssetClassesData import close_price, annual_return, Assets
-from Risk import plot_risk, risk_aversion, port_perf_data
+from Risk import plot_risk, risk_aversion, risk_category, port_perf_data
 from EfficientFrontier import X, Y, p_perf, plot_portfolios, table_weights
 
 app = dash.Dash(suppress_callback_exceptions=True)
@@ -26,7 +26,7 @@ app.layout = html.Div([
                 dcc.Tab( id='tab1', value = 'tab-1', label='Investor Profile', children=[ 
                         html.H1('Robo-Advisor: Portfolio Management Application', style={'font-size': '32px', 'font-family': 'verdana', 'textAlign': 'center', 'color': '#3D81AF'}),
                         html.H2("Investor's Profile", style=text_style),
-                        html.P('Please respond the following questionnaire to compute your coefficient of risk aversion.',style=paragraph_style),
+                        html.P('Please respond the following questionnaire to compute your level of risk aversion.',style=paragraph_style),
                         html.P('You are probably familiar with games shown on television, where people win prizes and can choose between several options. For example, they can choose to keep a certain prize, or they can choose to take a chance to get a much bigger prize, at the risk of losing the prize all together.' ,style=disclaimer_style),
                         html.P('The following questions present similar choices, concerning amounts of money. Some of the amounts are certain for you to have, others you can win in a lottery.' ,style=disclaimer_style),
                         html.P('We would like to know which choice you would make. There are no right or wrong answers with these questions.' ,style=disclaimer_style),
@@ -248,8 +248,8 @@ def update_quest5(value, quest1, quest2, quest3, quest4):
     [dash.dependencies.Input('quest-button', 'n_clicks')],
     [dash.dependencies.State('quest5', 'value')])
 def update_output_quest2(n_clicks, value):
-    return 'Your coefficient of risk aversion is "{}". In a scale of 4 (low risk aversion) to 20 (high risk aversion). '.format(
-        value
+    return 'Your risk aversion level is "{}", or "{}" category, in a scale of 4 (low risk aversion) to 20 (very high risk aversion). '.format(
+        value, risk_category(value)
     )
 
 @app.callback(
