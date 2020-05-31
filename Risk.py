@@ -36,7 +36,7 @@ def risk_category(value):
         elif value < 9:
             rsk_cat = "Low risk aversion"
         elif value < 13:
-            rsk_cat = "Moderate risk version"
+            rsk_cat = "Moderate risk aversion"
         elif value < 17:
             rsk_cat = "High risk aversion"
         else: 
