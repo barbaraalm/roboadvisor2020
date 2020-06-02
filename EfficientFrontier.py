@@ -169,7 +169,7 @@ def plot_portfolios(rel_risk_aversion, X, Y,p_perf):
         #width= 1000,
         xaxis_title='Volatility',
         yaxis_title='Return',
-        legend_orientation="h",   
+        #legend_orientation="h",   
     )
     fig_frontier = Figure( layout=layout)
     fig_frontier.add_trace(
